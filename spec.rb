@@ -21,15 +21,64 @@ class Person
   end
 
   # implement your behavior here
+  def full_name
+    if @middle_name.nil?
+      @first_name+' '+@last_name
+    else
+      @first_name+' '+@middle_name+' '+@last_name
+    end
+  end
+
+  def full_name_with_middle_initial
+    if @middle_name.nil?
+      @first_name+' '+@last_name
+    else
+      @first_name+' '+initial(@middle_name)+' '+@last_name
+    end
+  end
+
+  def initials
+    if @middle_name.nil?
+      initial(@first_name)+initial(@last_name)
+    else
+      initial(@first_name)+initial(@middle_name)+initial(@last_name)
+    end
+  end
+
+  def initial(name)
+    name[0,1]
+  end
 end
 
 RSpec.describe Person do
   describe "#full_name" do
-    it "concatenates first name, middle name, and last name with spaces"
-    it "does not add extra spaces if middle name is missing"
+    it "concatenates first name, middle name, and last name with spaces" do
+      person = Person.new(first_name: 'Annabeth',middle_name: 'Athena',last_name: 'Chase')
+      expect(person.full_name).to eq('Annabeth Athena Chase')
+    end
+
+    it "does not add extra spaces if middle name is missing" do
+      person = Person.new(first_name: 'Annabeth',last_name: 'Chase')
+      expect(person.full_name).to eq('Annabeth Chase')
+    end
   end
 
-  describe "#full_name_with_middle_initial"
+  describe "#full_name_with_middle_initial" do
+    it "returns full name with middle initial" do
+      person = Person.new(first_name: 'Annabeth',middle_name: 'Athena',last_name: 'Chase')
+      expect(person.full_name_with_middle_initial).to eq('Annabeth A Chase')
+    end
+  end
 
-  describe "#initials"
+  describe "#initials" do
+    it "returns only initials" do
+      person = Person.new(first_name: 'Annabeth',middle_name: 'Athena',last_name: 'Chase')
+      expect(person.initials).to eq('AAC')
+    end
+
+    it "returns only 2 initials if middle name is nil" do
+      person = Person.new(first_name: 'Annabeth',last_name: 'Chase')
+      expect(person.initials).to eq('AC')
+    end
+  end
 end
